@@ -34,6 +34,7 @@ ordinal and brc20
 - BTC生态全景
 - 主流平台和钱包分析
 - ordinal协议分析
+  - https://unchainedcrypto.com/how-to-create-a-bitcoin-ordinal/
   - https://github.com/casey/ord/
   - https://docs.ordinals.com/
     - 自己部署铭刻：https://docs.ordinals.com/guides/inscriptions.html

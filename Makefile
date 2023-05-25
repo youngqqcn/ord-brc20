@@ -27,15 +27,22 @@ ord-inscriptions:
 	ord --regtest --cookie-file /home/yqq/mine/ord-brc20/bitcoin.cookie wallet inscriptions
 
 newaddress:
-	bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808 -rpcwallet=test1  getnewaddress test2 bech32m
+	bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808 -rpcwallet=descriptors  getnewaddress test1 bech32m
 
 
 loadwallet:
-	bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808 -rpcwallet=test1 loadwallet test1
+	bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808 -rpcwallet=descriptors loadwallet descriptors
 
 
+getbalances:
+	bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808 -rpcwallet=descriptors getbalance
+
+getaddressesbylabel:
+	bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808 -rpcwallet=descriptors getaddressesbylabel test1
+
+#bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808 -rpcwallet=descriptors -named sendtoaddress address="bcrt1px4ffhmxsmcdzjqkcmd3e3nec0n8ha9z3cqzfnxwhske5w3pmx0gs6ygf3m" amount=0.5 fee_rate=25
 send:
-	bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808 -rpcwallet=test1 -named sendtoaddress address="bcrt1px4ffhmxsmcdzjqkcmd3e3nec0n8ha9z3cqzfnxwhske5w3pmx0gs6ygf3m" amount=0.5 fee_rate=25
+	 bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808 -rpcwallet=test1 -named sendtoaddress address="bcrt1p3m68zq7vg7j9hey63uasw0ejr3vsgg862luy7af64c8e4tar75gqxxcyvj" amount=100 fee_rate=25
 
 generate_new_block:
 	bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808  generatetoaddress 1 bcrt1qqv33jfmpethnrcr6xrdxtleszv7lhufvx7p6yn
