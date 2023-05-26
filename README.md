@@ -1,6 +1,9 @@
 # ord-brc20
 ordinal and brc20
 
+- 铭刻教程：
+  - https://www.panewslab.com/zh/articledetails/27ojhj8a.html
+
 - Taproot升级
   - https://gamma.io/learn/blockchain/bitcoin/taproot-upgrade
 - Tapscript
@@ -56,7 +59,9 @@ ordinal and brc20
   - https://unisat.io
   - https://idclub.io/index
 
-
+- 开源铭刻：
+  - https://looksordinal.com/
+    - https://medium.com/@rarity.garden/inscriptions-with-looksordinal-cfa2d635f720
 
 - 区块浏览器：
   - https://mempool.space/zh/
@@ -96,3 +101,14 @@ ord --regtest --cookie-file /home/yqq/mine/ord-brc20/bitcoin.cookie wallet inscr
   "fees": 2940
 }
 ```
+
+
+
+----
+
+
+bitcoin testnet  faucet
+
+https://testnet-faucet.com/btc-testnet/
+
+
