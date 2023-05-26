@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"log"
 	"strconv"
 	"strings"
@@ -34,8 +35,8 @@ func main() {
 	//  bcrt1p4anml5s767csvrhwm2lehx9h2wyeqnj9gazdrxhygag89fruz8eqyjetzt
 	gwif = "cS4bEaUoFkWM5qRaPXzGTmUje73b5zDkbamXDv5SuMWCM3fHJnyy"
 	gop = "mint"
-	gtick = "100"
-	gamount = ""
+	gtick = "EAGLE"
+	gamount = "1000"
 	grepeat = "1"
 	gsats = "25"
 
@@ -115,11 +116,27 @@ func run(forEstimate bool) (txid string, txids []string, fee int64, err error) {
 
 	dataList := make([]ord.InscriptionData, 0)
 
+
+
+	// read image from filename
+	imgBs, err := ioutil.ReadFile("../eagle-1.png")
+	if err != nil {
+		fmt.Printf("error:%v\n", err.Error())
+		return
+	}
 	mint := ord.InscriptionData{
-		ContentType: "text/plain;charset=utf-8",
-		Body:        []byte(fmt.Sprintf(`{"p":"brc-20","op":"%s","tick":"%s","amt":"%s"}`, gop, gtick, gamount)),
+		// ContentType: "image/jpeg",
+		// ContentType: "image/gif",
+		ContentType: "image/png",
+		Body:       imgBs,
 		Destination: utxoTaprootAddress.EncodeAddress(),
 	}
+
+	// mint := ord.InscriptionData{
+	// 	ContentType: "text/plain;charset=utf-8",
+	// 	Body:        []byte(fmt.Sprintf(`{"p":"brc-20","op":"%s","tick":"%s","amt":"%s"}`, gop, gtick, gamount)),
+	// 	Destination: utxoTaprootAddress.EncodeAddress(),
+	// }
 
 	count, err := strconv.Atoi(grepeat)
 	if err != nil {
