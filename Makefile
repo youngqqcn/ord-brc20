@@ -46,7 +46,7 @@ getaddressesbylabel:
 #bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808 -rpcwallet=yqq -named sendtoaddress address="bcrt1px4ffhmxsmcdzjqkcmd3e3nec0n8ha9z3cqzfnxwhske5w3pmx0gs6ygf3m" amount=0.5 fee_rate=25
 #  bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808 -rpcwallet=yqq -named sendtoaddress address="bcrt1p3m68zq7vg7j9hey63uasw0ejr3vsgg862luy7af64c8e4tar75gqxxcyvj" amount=100 fee_rate=25
 send:
-	 bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808 -rpcwallet=yqq -named sendtoaddress address="bcrt1plf8sqhwr8tw4m9uks6yhq5l6rkuck4efsr9qfk5gmpxvygkpz37qtx62uf" amount=100 fee_rate=25
+	 bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808 -rpcwallet=yqq -named sendtoaddress address="bcrt1p78vllj6tchpe0tsf3pg3t33eyha5fv04qangma8njwdv2lewftpq3purje" amount=10 fee_rate=25
 
 generate_new_block:
 	bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808  generatetoaddress 1 bcrt1qqv33jfmpethnrcr6xrdxtleszv7lhufvx7p6yn
@@ -58,9 +58,12 @@ gettransaction:
 getblockchaininfo:
 	curl --user qiyihuo:qiyihuo1808  --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "getblockchaininfo", "params": []}' -H 'content-type: text/plain;' http://127.0.0.1:18443/
 
-
+#bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808  importdescriptors '[{ "desc": "rawtr(cS4bEaUoFkWM5qRaPXzGTmUje73b5zDkbamXDv5SuMWCM3fHJnyy)#aj0gxagn",  "active":false, "timestamp":"now", "internal": true }]'
 importdescriptors:
-	bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808  importdescriptors '[{ "desc": "rawtr(cS4bEaUoFkWM5qRaPXzGTmUje73b5zDkbamXDv5SuMWCM3fHJnyy)#aj0gxagn",  "active":false, "timestamp":"now", "internal": true }]'
+	bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808  importdescriptors '[{ "desc": "rawtr(cVHTRk2g4YFiWXufCLJ8ZV2KVqLaqHqksKg3Ay8wRRztJFSEJHto)#4las3lll",  "active":false, "timestamp":"now", "internal": true }]'
+
+getdescriptorinfo:
+	bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808  getdescriptorinfo "rawtr(SmTDjW72t5BQ4UuNXJzCQwZSeTNcTXL8RSeC4ybqhDyGiizZz5n)"
 
 listunspent:
 	 bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808 -rpcwallet=yqq listunspent 0 1999999 [\"bcrt1p27gduney7a3pxl3wqc3p9rzy9q4ew5a43du8eznat7scpqnuaf0s0pxnq0\"]
@@ -68,3 +71,6 @@ listunspent:
 
 cleanindex:
 	rm -rf ~/.local/share/ord/regtest/
+
+listdescriptors:
+	bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808 -rpcwallet=yqq  listdescriptors

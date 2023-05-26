@@ -37,13 +37,17 @@ func TestImportDescriptorsCmds(t *testing.T) {
 	// if err != nil {
 	// 	log.Fatal(err)
 	// }
+	fmt.Printf("=================\n")
 
 	// btcApiClient := mempool.NewClient(netParams)
-	privateKeyWIF, err := btcutil.DecodeWIF("cS4bEaUoFkWM5qRaPXzGTmUje73b5zDkbamXDv5SuMWCM3fHJnyy")
+	// privateKeyWIF, err := btcutil.DecodeWIF("cS4bEaUoFkWM5qRaPXzGTmUje73b5zDkbamXDv5SuMWCM3fHJnyy")
+	privateKeyWIF, err := btcutil.DecodeWIF("cVHTRk2g4YFiWXufCLJ8ZV2KVqLaqHqksKg3Ay8wRRztJFSEJHto")
 	if err != nil {
+		log.Printf("fffffffffffffffffff\n")
+		log.Fatal(err)
 		return
 	}
-	log.Printf("wif: %v", privateKeyWIF.String())
+	fmt.Printf("wif: %v", privateKeyWIF.String())
 
 	descriptorInfo, err := client.GetDescriptorInfo(fmt.Sprintf("rawtr(%s)", privateKeyWIF))
 	if err != nil {

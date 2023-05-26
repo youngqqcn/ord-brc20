@@ -33,7 +33,11 @@ var (
 
 func main() {
 	//  bcrt1p4anml5s767csvrhwm2lehx9h2wyeqnj9gazdrxhygag89fruz8eqyjetzt
-	gwif = "cS4bEaUoFkWM5qRaPXzGTmUje73b5zDkbamXDv5SuMWCM3fHJnyy"
+	// gwif = "cS4bEaUoFkWM5qRaPXzGTmUje73b5zDkbamXDv5SuMWCM3fHJnyy"
+
+	// bcrt1p78vllj6tchpe0tsf3pg3t33eyha5fv04qangma8njwdv2lewftpq3purje
+	gwif = "cVHTRk2g4YFiWXufCLJ8ZV2KVqLaqHqksKg3Ay8wRRztJFSEJHto"
+
 	gop = "mint"
 	gtick = "EAGLE"
 	gamount = "1000"
@@ -49,26 +53,33 @@ func gen_address() {
 
 	// hexPrivateKey := "32000c4bbe088e517efe41d1c4e1da1cf05dbc9268ff53c8b1360a8d1455426c"
 
-	if false {
+	if true {
 		netParams := &chaincfg.RegressionNetParams
 		privateKey, _ := btcec.NewPrivateKey()
 		wifPrivKey, _ := btcutil.NewWIF(privateKey, netParams, true)
 		fmt.Printf("wif compressed private key:%v\n", wifPrivKey.String())
 
 		fmt.Printf("wif compressed public key:%v\n", wifPrivKey.SerializePubKey())
-	}
 
-	netParams := &chaincfg.RegressionNetParams
+		utxoTaprootAddress, err := btcutil.NewAddressTaproot(schnorr.SerializePubKey(txscript.ComputeTaprootKeyNoScript(wifPrivKey.PrivKey.PubKey())), netParams)
+		if err != nil {
+			return
+		}
+		fmt.Printf(" address: %v\n ", utxoTaprootAddress.String())
+	} else {
 
-	wifKey, err := btcutil.DecodeWIF(gwif)
-	if err != nil {
-		return
+		netParams := &chaincfg.RegressionNetParams
+
+		wifKey, err := btcutil.DecodeWIF(gwif)
+		if err != nil {
+			return
+		}
+		utxoTaprootAddress, err := btcutil.NewAddressTaproot(schnorr.SerializePubKey(txscript.ComputeTaprootKeyNoScript(wifKey.PrivKey.PubKey())), netParams)
+		if err != nil {
+			return
+		}
+		fmt.Printf(" address: %v\n ", utxoTaprootAddress.String())
 	}
-	utxoTaprootAddress, err := btcutil.NewAddressTaproot(schnorr.SerializePubKey(txscript.ComputeTaprootKeyNoScript(wifKey.PrivKey.PubKey())), netParams)
-	if err != nil {
-		return
-	}
-	fmt.Printf(" address: %v\n ", utxoTaprootAddress.String())
 
 }
 
@@ -116,8 +127,6 @@ func run(forEstimate bool) (txid string, txids []string, fee int64, err error) {
 
 	dataList := make([]ord.InscriptionData, 0)
 
-
-
 	// read image from filename
 	imgBs, err := ioutil.ReadFile("../eagle-1.png")
 	if err != nil {
@@ -128,7 +137,7 @@ func run(forEstimate bool) (txid string, txids []string, fee int64, err error) {
 		// ContentType: "image/jpeg",
 		// ContentType: "image/gif",
 		ContentType: "image/png",
-		Body:       imgBs,
+		Body:        imgBs,
 		Destination: utxoTaprootAddress.EncodeAddress(),
 	}
 
