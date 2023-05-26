@@ -2,11 +2,13 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 
+	btcrpcclient "github.com/btcsuite/btcd/rpcclient"
 	"github.com/minchenzz/brc20tool/internal/ord"
-	"github.com/minchenzz/brc20tool/pkg/btcapi/mempool"
+	"github.com/minchenzz/brc20tool/pkg/rpcclient"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
@@ -29,43 +31,34 @@ var (
 )
 
 func main() {
-	// a := app.New()
-	// w := a.NewWindow("brc20 tool")
-	// w.Resize(fyne.NewSize(800, 600))
-	// // w.Resize(fyne.NewSize(800, 600))
-	// // w.SetContent(widget.NewLabel("Hello World!"))
-	// w.SetContent(makeForm(w))
-	// w.ShowAndRun()
-
-	gwif = ""
+	//  bcrt1p4anml5s767csvrhwm2lehx9h2wyeqnj9gazdrxhygag89fruz8eqyjetzt
+	gwif = "cS4bEaUoFkWM5qRaPXzGTmUje73b5zDkbamXDv5SuMWCM3fHJnyy"
 	gop = "mint"
 	gtick = "100"
 	gamount = ""
 	grepeat = "1"
 	gsats = "25"
 
-	// run(true)
-	gen_address()
+	run(false)
+
+	// gen_address()
 }
 
 func gen_address() {
 
 	// hexPrivateKey := "32000c4bbe088e517efe41d1c4e1da1cf05dbc9268ff53c8b1360a8d1455426c"
 
-	netParams := &chaincfg.RegressionNetParams
-	privateKey, _ := btcec.NewPrivateKey()
-	wifPrivKey, _ := btcutil.NewWIF(privateKey, netParams, true)
-	fmt.Printf("wif compressed private key:%v\n", wifPrivKey.String())
+	if false {
+		netParams := &chaincfg.RegressionNetParams
+		privateKey, _ := btcec.NewPrivateKey()
+		wifPrivKey, _ := btcutil.NewWIF(privateKey, netParams, true)
+		fmt.Printf("wif compressed private key:%v\n", wifPrivKey.String())
 
-	fmt.Printf("wif compressed public key:%v\n", wifPrivKey.SerializePubKey())
-
-}
-
-func run(forEstimate bool) (txid string, txids []string, fee int64, err error) {
-	// netParams := &chaincfg.MainNetParams
+		fmt.Printf("wif compressed public key:%v\n", wifPrivKey.SerializePubKey())
+	}
 
 	netParams := &chaincfg.RegressionNetParams
-	btcApiClient := mempool.NewClient(netParams)
+
 	wifKey, err := btcutil.DecodeWIF(gwif)
 	if err != nil {
 		return
@@ -74,15 +67,37 @@ func run(forEstimate bool) (txid string, txids []string, fee int64, err error) {
 	if err != nil {
 		return
 	}
-	unspentList, err := btcApiClient.ListUnspent(utxoTaprootAddress)
+	fmt.Printf(" address: %v\n ", utxoTaprootAddress.String())
+
+}
+
+func run(forEstimate bool) (txid string, txids []string, fee int64, err error) {
+	// netParams := &chaincfg.MainNetParams
+
+	netParams := &chaincfg.RegressionNetParams
+	// btcApiClient := mempool.NewClient(netParams)
+	wifKey, err := btcutil.DecodeWIF(gwif)
+	if err != nil {
+		return
+	}
+	utxoTaprootAddress, err := btcutil.NewAddressTaproot(schnorr.SerializePubKey(txscript.ComputeTaprootKeyNoScript(wifKey.PrivKey.PubKey())), netParams)
+	if err != nil {
+		return
+	}
+	// unspentList, err := btcApiClient.ListUnspent(utxoTaprootAddress)
+	unspentList, err := rpcclient.ListUnspent(utxoTaprootAddress)
 	if err != nil {
 		return
 	}
 
-	if len(unspentList) == 0 {
-		err = fmt.Errorf("no utxo for %s", utxoTaprootAddress)
-		return
-	}
+	fmt.Printf("utxo size is %v\n", len(unspentList))
+
+	// return
+
+	// if len(unspentList) == 0 {
+	// 	err = fmt.Errorf("no utxo for %s", utxoTaprootAddress)
+	// 	return
+	// }
 
 	vinAmount := 0
 	commitTxOutPointList := make([]*wire.OutPoint, 0)
@@ -95,6 +110,8 @@ func run(forEstimate bool) (txid string, txids []string, fee int64, err error) {
 		commitTxPrivateKeyList = append(commitTxPrivateKeyList, wifKey.PrivKey)
 		vinAmount += int(unspentList[i].Output.Value)
 	}
+	fmt.Printf("len(commitTxOutPointList) is %v\n", len(commitTxOutPointList))
+	fmt.Printf("len(commitTxPrivateKeyList) is %v\n", len(commitTxPrivateKeyList))
 
 	dataList := make([]ord.InscriptionData, 0)
 
@@ -127,7 +144,22 @@ func run(forEstimate bool) (txid string, txids []string, fee int64, err error) {
 		SingleRevealTxOnly:     false,
 	}
 
-	tool, err := ord.NewInscriptionToolWithBtcApiClient(netParams, btcApiClient, &request)
+	connCfg := &btcrpcclient.ConnConfig{
+		// Host:         "localhost:8336",
+		Host:         "127.0.0.1:18443",
+		User:         "qiyihuo",
+		Pass:         "qiyihuo1808",
+		HTTPPostMode: true,
+		DisableTLS:   true,
+	}
+	client, err := btcrpcclient.New(connCfg, nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer client.Shutdown()
+
+	// tool, err := ord.NewInscriptionToolWithBtcApiClient(netParams, btcApiClient, &request)
+	tool, err := ord.NewInscriptionTool(netParams, client, &request)
 	if err != nil {
 		return
 	}
@@ -146,9 +178,13 @@ func run(forEstimate bool) (txid string, txids []string, fee int64, err error) {
 	}
 
 	txid = commitTxHash.String()
+	fmt.Println(txid)
 	for i := range revealTxHashList {
 		txids = append(txids, revealTxHashList[i].String())
+		fmt.Println(revealTxHashList[i].String())
 	}
+	fmt.Printf("fee: %v\n", fee)
+
 	return
 }
 

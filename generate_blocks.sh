@@ -9,6 +9,6 @@ echo "Generating a block every minute. Press [CTRL+C] to stop.."
 while :
 do
         echo "Generate a new block `date '+%d/%m/%Y %H:%M:%S'`"
-        bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808  generatetoaddress 110 bcrt1p3m68zq7vg7j9hey63uasw0ejr3vsgg862luy7af64c8e4tar75gqxxcyvj
+        bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808  generatetoaddress 200 bcrt1p27gduney7a3pxl3wqc3p9rzy9q4ew5a43du8eznat7scpqnuaf0s0pxnq0
         sleep 100
 done

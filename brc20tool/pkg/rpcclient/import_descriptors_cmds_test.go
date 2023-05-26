@@ -1,22 +1,21 @@
 package rpcclient
 
 import (
-	"errors"
 	"fmt"
-	"github.com/btcsuite/btcd/btcec/v2"
-	"github.com/btcsuite/btcd/btcjson"
-	"github.com/btcsuite/btcd/btcutil"
-	"github.com/btcsuite/btcd/chaincfg"
-	"github.com/btcsuite/btcd/rpcclient"
 	"log"
 	"testing"
+
+	"github.com/btcsuite/btcd/btcjson"
+	"github.com/btcsuite/btcd/btcutil"
+	"github.com/btcsuite/btcd/rpcclient"
 )
 
 func TestImportDescriptorsCmds(t *testing.T) {
 	connCfg := &rpcclient.ConnConfig{
-		Host:         "localhost:8336",
-		User:         "yourrpcuser",
-		Pass:         "yourrpcpass",
+		// Host:         "localhost:8336",
+		Host:         "127.0.0.1:18443",
+		User:         "qiyihuo",
+		Pass:         "qiyihuo1808",
 		HTTPPostMode: true,
 		DisableTLS:   true,
 	}
@@ -26,22 +25,33 @@ func TestImportDescriptorsCmds(t *testing.T) {
 	}
 	defer client.Shutdown()
 
-	net := &chaincfg.SigNetParams
+	// net := &chaincfg.SigNetParams
+	// net := &chaincfg.RegressionNetParams
 
-	privateKey, err := btcec.NewPrivateKey()
-	if err != nil {
-		log.Fatal(err)
-	}
+	// privateKey, err := btcec.NewPrivateKey()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
 
-	privateKeyWIF, err := btcutil.NewWIF(privateKey, net, true)
+	// privateKeyWIF, err := btcutil.NewWIF(privateKey, net, true)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+
+	// btcApiClient := mempool.NewClient(netParams)
+	privateKeyWIF, err := btcutil.DecodeWIF("cS4bEaUoFkWM5qRaPXzGTmUje73b5zDkbamXDv5SuMWCM3fHJnyy")
 	if err != nil {
-		log.Fatal(err)
+		return
 	}
+	log.Printf("wif: %v", privateKeyWIF.String())
+
 	descriptorInfo, err := client.GetDescriptorInfo(fmt.Sprintf("rawtr(%s)", privateKeyWIF))
 	if err != nil {
 		log.Fatal(err)
 	}
 
+	nextIndex := 0
+	rangeN := []int{0, 100000}
 	descriptors := []Descriptor{
 		{
 
@@ -49,13 +59,22 @@ func TestImportDescriptorsCmds(t *testing.T) {
 			Timestamp: btcjson.TimestampOrNow{
 				Value: "now",
 			},
-			Active:    btcjson.Bool(false),
-			Range:     nil,
-			NextIndex: nil,
+			Active:    btcjson.Bool(true),
+			Range:     &rangeN,
+			NextIndex: &nextIndex,
 			Internal:  btcjson.Bool(false),
-			Label:     btcjson.String("test label"),
+			Label:     btcjson.String("yqq"),
 		},
 	}
+
+	log.Printf("desc: %v", *btcjson.String(fmt.Sprintf("rawtr(%s)#%s", privateKeyWIF, descriptorInfo.Checksum)))
+
+	// cmd := &ImportDescriptorsCmd{
+	// 	Descriptors: descriptors,
+	// }
+
+	// marshalledJSON, err := btcjson.MarshalCmd("jsonrpc1.0", 111, cmd)
+	// log.Printf("%v\n", marshalledJSON)
 
 	results, err := ImportDescriptors(client, descriptors)
 	if err != nil {
@@ -66,7 +85,7 @@ func TestImportDescriptorsCmds(t *testing.T) {
 	}
 	for _, result := range *results {
 		if !result.Success {
-			log.Fatal(errors.New("import failed"))
+			log.Fatal(fmt.Errorf("import failed:%v", result.Error.Message))
 		}
 	}
 	log.Printf("Import descriptors success.")

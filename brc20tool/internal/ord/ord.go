@@ -336,6 +336,11 @@ func (tool *InscriptionTool) buildCommitTx(commitTxOutPointList []*wire.OutPoint
 		tx.AddTxOut(tool.txCtxDataList[i].revealTxPrevOutput)
 	}
 
+	if changePkScript == nil {
+		fmt.Printf("len(commitTxOutPointList) is %v\n", len(commitTxOutPointList) )
+		fmt.Println("======== changePkScript is nil ========")
+	}
+
 	tx.AddTxOut(wire.NewTxOut(0, *changePkScript))
 	fee := btcutil.Amount(mempool.GetTxVirtualSize(btcutil.NewTx(tx))) * btcutil.Amount(commitFeeRate)
 	changeAmount := totalSenderAmount - btcutil.Amount(totalRevealPrevOutput) - fee

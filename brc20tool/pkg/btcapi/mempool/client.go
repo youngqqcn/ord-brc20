@@ -22,6 +22,8 @@ func NewClient(netParams *chaincfg.Params) *MempoolClient {
 	} else if netParams.Net == chaincfg.SigNetParams.Net {
 		baseURL = "https://mempool.space/signet/api"
 	} else {
+		// baseURL = "https://mempool.space/signet/api"
+
 		log.Fatal("mempool don't support other netParams")
 	}
 	return &MempoolClient{
