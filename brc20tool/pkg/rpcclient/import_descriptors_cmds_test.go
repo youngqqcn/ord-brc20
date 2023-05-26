@@ -54,20 +54,19 @@ func TestImportDescriptorsCmds(t *testing.T) {
 		log.Fatal(err)
 	}
 
-	nextIndex := 0
-	rangeN := []int{0, 100000}
+	// nextIndex := 0
+	// rangeN := []int{0, 100000}
 	descriptors := []Descriptor{
 		{
-
 			Desc: *btcjson.String(fmt.Sprintf("rawtr(%s)#%s", privateKeyWIF, descriptorInfo.Checksum)),
 			Timestamp: btcjson.TimestampOrNow{
 				Value: "now",
 			},
-			Active:    btcjson.Bool(true),
-			Range:     &rangeN,
-			NextIndex: &nextIndex,
-			Internal:  btcjson.Bool(false),
-			Label:     btcjson.String("yqq"),
+			Active:    btcjson.Bool(false),
+			Range:     nil,
+			NextIndex: nil,
+			Internal:  btcjson.Bool(true),
+			// Label:     btcjson.String("yqq"),
 		},
 	}
 

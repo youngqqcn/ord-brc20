@@ -56,7 +56,13 @@ gettransaction:
 
 
 getblockchaininfo:
-	curl --user qiyihuo:qiyihuo1808  --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "getblockchaininfo", "params": []}' -H 'content-type: text/plain;' http://127.0.0.1:18443/
+	curl -s --user qiyihuo:qiyihuo1808  --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "getblockchaininfo", "params": []}' -H 'content-type: text/plain;' http://127.0.0.1:18443/
+
+
+
+getblock:
+	curl -s --user qiyihuo:qiyihuo1808  --data-binary '{"jsonrpc": "1.0", "id": "curltest", "method": "getblock", "params": ["2b24119c63a7f4fd218b944f49552fbdbae095201e66b0c10d35e166387c3a66"]}' -H 'content-type: text/plain;' http://127.0.0.1:18443/
+
 
 #bitcoin-cli -chain=regtest -rpcuser=qiyihuo -rpcpassword=qiyihuo1808  importdescriptors '[{ "desc": "rawtr(cS4bEaUoFkWM5qRaPXzGTmUje73b5zDkbamXDv5SuMWCM3fHJnyy)#aj0gxagn",  "active":false, "timestamp":"now", "internal": true }]'
 importdescriptors:
