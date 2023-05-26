@@ -280,6 +280,7 @@ fn create_inscription_transactions(
     witness.push(reveal_script);
     witness.push(&control_block.serialize());
 
+    // 16） 恢复密钥相关， 不必细究
     let recovery_key_pair = key_pair.tap_tweak(&secp256k1, taproot_spend_info.merkle_root());
 
     let (x_only_pub_key, _parity) = recovery_key_pair.to_inner().x_only_public_key();
@@ -299,6 +300,7 @@ fn create_inscription_transactions(
         );
     }
 
+    // 返回
     Ok((unsigned_commit_tx, reveal_tx, recovery_key_pair))
 }
 
