@@ -148,16 +148,16 @@ https://testnet-faucet.com/btc-testnet/
 # 模块划分
 
 - 后台任务模块：
-  - BTC地址生成模块，基于BIP44规范
+  - BTC地址生成模块，基于BIP44规范(已完成)
   - BTC区块（内存池）扫描模块，监听用户充值交易
   - 异步铭刻模块
 
-API服务：
+API服务：(已完成)
   - 预约接口（已完成）
   - 链上实施费率查询（前端定时直接查mempool的接口）
     - https://mempool.space/api/v1/fees/recommended
   - 费用估算接口（服务费）
-    - 返回比特币价格
+    - 返总费用（美元）: 前端通过 api.coincap.io/v2/assets/bitcoin 获取btc的实时 乘以 btc的数量
   - 订单创建接口
     - 返回
       - 订单id,
@@ -167,7 +167,6 @@ API服务：
       - 铭刻费用
       - 服务费用
       - 总费用
-      - 总费用（美元）
 
   - 获取用户接收地址的详情：
     - 提示用户： 请不要使用存在未确认转出交易的账户进行付款
