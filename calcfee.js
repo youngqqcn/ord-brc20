@@ -5,7 +5,7 @@ function calcfee( count, feeRate ) {
 
     // 每个铭文固定金额
     utxoSat = 10000
-    averageFileSize = 2600  // 是 2600byte 不是 2600Byte
+    averageFileSize = 10816  // 是 2600byte 不是 2600Byte
 
     utxoOutputValue = utxoSat * count
     commitTxSize = 68 + (43 + 1)*count
