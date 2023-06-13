@@ -3,13 +3,11 @@ package main
 import (
 	"fmt"
 	"io/ioutil"
-	"log"
 	"strconv"
 	"strings"
 
-	btcrpcclient "github.com/btcsuite/btcd/rpcclient"
 	"github.com/minchenzz/brc20tool/internal/ord"
-	"github.com/minchenzz/brc20tool/pkg/rpcclient"
+	"github.com/minchenzz/brc20tool/pkg/btcapi/mempool"
 
 	"fyne.io/fyne/v2"
 	"fyne.io/fyne/v2/dialog"
@@ -35,14 +33,14 @@ func main() {
 	//  bcrt1p4anml5s767csvrhwm2lehx9h2wyeqnj9gazdrxhygag89fruz8eqyjetzt
 	// gwif = "cS4bEaUoFkWM5qRaPXzGTmUje73b5zDkbamXDv5SuMWCM3fHJnyy"
 
-	// bcrt1p78vllj6tchpe0tsf3pg3t33eyha5fv04qangma8njwdv2lewftpq3purje
-	gwif = "cVHTRk2g4YFiWXufCLJ8ZV2KVqLaqHqksKg3Ay8wRRztJFSEJHto"
+	// tb1pwqqs3637kfz263vez9dzjy9s8esgtfe4s2msx5zjhtjg5rv6gpvsje4z86
+	gwif = "cTKDLqjb4zVN2ZikpfkXwzomBitepVxukevuEbjmMJNSf4LfbV6P"
 
 	gop = "mint"
 	gtick = "EAGLE"
 	gamount = "1000"
 	grepeat = "1"
-	gsats = "25"
+	gsats = "3"
 
 	run(false)
 
@@ -86,8 +84,9 @@ func gen_address() {
 func run(forEstimate bool) (txid string, txids []string, fee int64, err error) {
 	// netParams := &chaincfg.MainNetParams
 
-	netParams := &chaincfg.RegressionNetParams
-	// btcApiClient := mempool.NewClient(netParams)
+	// netParams := &chaincfg.RegressionNetParams
+	netParams := &chaincfg.TestNet3Params
+	btcApiClient := mempool.NewClient(netParams)
 	wifKey, err := btcutil.DecodeWIF(gwif)
 	if err != nil {
 		return
@@ -96,8 +95,8 @@ func run(forEstimate bool) (txid string, txids []string, fee int64, err error) {
 	if err != nil {
 		return
 	}
-	// unspentList, err := btcApiClient.ListUnspent(utxoTaprootAddress)
-	unspentList, err := rpcclient.ListUnspent(utxoTaprootAddress)
+	unspentList, err := btcApiClient.ListUnspent(utxoTaprootAddress)
+	// unspentList, err := rpcclient.ListUnspent(utxoTaprootAddress)
 	if err != nil {
 		return
 	}
@@ -115,7 +114,7 @@ func run(forEstimate bool) (txid string, txids []string, fee int64, err error) {
 	commitTxOutPointList := make([]*wire.OutPoint, 0)
 	commitTxPrivateKeyList := make([]*btcec.PrivateKey, 0)
 	for i := range unspentList {
-		if unspentList[i].Output.Value < 10000 {
+		if unspentList[i].Output.Value < 1000 {
 			continue
 		}
 		commitTxOutPointList = append(commitTxOutPointList, unspentList[i].Outpoint)
@@ -128,7 +127,7 @@ func run(forEstimate bool) (txid string, txids []string, fee int64, err error) {
 	dataList := make([]ord.InscriptionData, 0)
 
 	// read image from filename
-	imgBs, err := ioutil.ReadFile("../eagle-1.png")
+	imgBs, err := ioutil.ReadFile("../1.png")
 	if err != nil {
 		fmt.Printf("error:%v\n", err.Error())
 		return
@@ -138,7 +137,8 @@ func run(forEstimate bool) (txid string, txids []string, fee int64, err error) {
 		// ContentType: "image/gif",
 		ContentType: "image/png",
 		Body:        imgBs,
-		Destination: utxoTaprootAddress.EncodeAddress(),
+		// Destination: utxoTaprootAddress.EncodeAddress(),
+		Destination:   "tb1pv5d2mmx2v9cx9menxl5zlhacljqu9zqhltl4d303n3rjjcxfrgwq20ej2q",
 	}
 
 	// mint := ord.InscriptionData{
@@ -170,22 +170,22 @@ func run(forEstimate bool) (txid string, txids []string, fee int64, err error) {
 		SingleRevealTxOnly:     false,
 	}
 
-	connCfg := &btcrpcclient.ConnConfig{
-		// Host:         "localhost:8336",
-		Host:         "127.0.0.1:18443",
-		User:         "qiyihuo",
-		Pass:         "qiyihuo1808",
-		HTTPPostMode: true,
-		DisableTLS:   true,
-	}
-	client, err := btcrpcclient.New(connCfg, nil)
-	if err != nil {
-		log.Fatal(err)
-	}
-	defer client.Shutdown()
+	// connCfg := &btcrpcclient.ConnConfig{
+	// 	// Host:         "localhost:8336",
+	// 	Host:         "127.0.0.1:18443",
+	// 	User:         "qiyihuo",
+	// 	Pass:         "qiyihuo1808",
+	// 	HTTPPostMode: true,
+	// 	DisableTLS:   true,
+	// }
+	// client, err := btcrpcclient.New(connCfg, nil)
+	// if err != nil {
+	// 	log.Fatal(err)
+	// }
+	// defer client.Shutdown()
 
-	// tool, err := ord.NewInscriptionToolWithBtcApiClient(netParams, btcApiClient, &request)
-	tool, err := ord.NewInscriptionTool(netParams, client, &request)
+	tool, err := ord.NewInscriptionToolWithBtcApiClient(netParams, btcApiClient, &request)
+	// tool, err := ord.NewInscriptionTool(netParams, client, &request)
 	if err != nil {
 		return
 	}
