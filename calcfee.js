@@ -3,7 +3,8 @@
 
 function calcfee( count, averageFileSize, feeRate ) {
 
-    utxoOutputValue = 10000
+    // utxoOutputValue = 10000
+    utxoOutputValue = 1000
     commitTxSize = 68 + (43 + 1)
     commitTxSize += 64
     revealTxSize = 10.5 + (57.5 + 43)
@@ -22,9 +23,12 @@ function calcfee( count, averageFileSize, feeRate ) {
 
 
 function test() {
-    f = calcfee(1, 3)
-    console.log( f )
-    console.log( f / 1e8 )
+    f = calcfee(1, 550, 10)
+    console.log('每个: ', f, 'sats')
+    console.log('每个: ', f * 30185/1e8 , 'USD')
+    console.log('900个: ', f * 30185/1e8 *900, 'USD')
+    console.log('900个: ', f * 900 , 'sats')
+    console.log('900个: ', f * 900 /1e8, 'BTC')
 }
 
 test()
